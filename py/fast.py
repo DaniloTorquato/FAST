@@ -145,5 +145,5 @@ if __name__ == '__main__':
     print("Updating FAST dependencies...")
     all_tests = parseTests(working_dir)
     
-    exec(open("prioritize.py").read())
+    exec(open("py/prioritize.py").read())
     
