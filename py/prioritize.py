@@ -85,7 +85,7 @@ def bboxPrioritization(iteration):
     # Standard FAST parameters
     r, b = 1, 10
     
-    print(" Run", iteration)
+    print(" Run", iteration+ 1)
     
     if method == "FAST-pw":
         stime, ptime, prioritization = fast_pw(
@@ -126,7 +126,6 @@ def bboxPrioritization(iteration):
 
 
 if __name__ == "__main__":
-    num_iterations = 1
     working_dir = sys.argv[2]
     results_dir = sys.argv[2]
     fast_dir = os.path.join(working_dir,'.fast')
@@ -138,7 +137,6 @@ if __name__ == "__main__":
             os.makedirs(output_dir)
     num_cores = multiprocessing.cpu_count()
     with Pool(num_cores) as pool:
-            running_time = pool.map(bboxPrioritization, range(1, num_iterations + 1))
+            running_time = pool.map(bboxPrioritization, range(1))
 
     total_time = deepcopy(running_time)
-    
