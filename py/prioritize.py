@@ -40,7 +40,6 @@ import sys
 from copy import deepcopy
 
 from algorithms import fast_pw, fast_, loadTestSuite
-from functions import read_file, save_file
 #from constants import *
 # import metric
 
@@ -61,6 +60,22 @@ method = sys.argv[4]
 test_suite = {}
 id_map = {}
 total_time = {}
+
+def read_file(file_path):
+    with open(file_path, "r") as f:
+        return  list(
+                    filter(lambda line: len(line) > 0 and "$" not in line,
+                        map(lambda line: line.strip(), 
+                            f.readlines() 
+                        ) 
+                    ) 
+                )
+    return []
+
+
+def save_file(file_path, data):
+    with open(file_path, "w") as f:
+        f.write("\n".join(data)+"\n")
 
 def bboxPrioritization(iteration):
     global working_dir
