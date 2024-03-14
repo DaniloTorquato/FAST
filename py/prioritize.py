@@ -132,7 +132,6 @@ if __name__ == "__main__":
     fast_dir = os.path.join(working_dir,'.fast')
     suite = "fast"
     tests = all_tests
-    print(tests)
     test_suite, id_map = loadTestSuite(tests, input_dir=fast_dir)
     output_dir = os.path.join(results_dir, suite)
     if not os.path.exists(output_dir):
