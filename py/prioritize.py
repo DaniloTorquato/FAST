@@ -87,7 +87,7 @@ def bboxPrioritization(iteration):
     
     print(" Run", iteration)
     
-    if method == "fast-pw":
+    if method == "FAST-pw":
         stime, ptime, prioritization = fast_pw(
                 r, b, test_suite)
     if method == "FAST-one":
@@ -127,13 +127,12 @@ def bboxPrioritization(iteration):
 
 if __name__ == "__main__":
     num_iterations = 1
-    what_to_prioritize = "all"
     working_dir = sys.argv[2]
     results_dir = sys.argv[2]
     fast_dir = os.path.join(working_dir,'.fast')
-    what_to_prioritize == "all"
     suite = "fast"
     tests = all_tests
+    print(tests)
     test_suite, id_map = loadTestSuite(tests, input_dir=fast_dir)
     output_dir = os.path.join(results_dir, suite)
     if not os.path.exists(output_dir):
