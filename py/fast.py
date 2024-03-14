@@ -35,7 +35,7 @@ from hashlib import md5
 from glob import glob
 import lsh
 
-usage = """USAGE: python fast.py --project-root <project-root> --algorithm <algorithm>
+usage = """USAGE: python3 fast.py --project-root <project-root> --algorithm <algorithm>
 OPTIONS:
   <project-root>: absolute path to the project.
   <algorithm>: possible values for <algorithm> are: FAST-pw, FAST-one, FAST-log, FAST-sqrt, FAST-all.
