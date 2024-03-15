@@ -4,7 +4,7 @@ This is a modified version of [FAST](https://github.com/brenomiranda/FAST) that 
 
 ## Usage: 
 ```
-python3 py/fast.py <project root> <algorithm>
+python3 py/fast.py <target-dir> <algorithm>
 ```
 
 Possible values for "algorithm" are: FAST-pw, FAST-one, FAST-log, FAST-sqrt, FAST-all.
