@@ -142,6 +142,14 @@ if __name__ == '__main__':
     	print(usage)
     	exit(1)
     
+    # Check if the algorithm is one of the valid options
+    valid_algorithms = ["FAST-pw", "FAST-one", "FAST-log", "FAST-sqrt", "FAST-all"]
+    
+    if algorithm not in valid_algorithms:
+    	print("The algorithm must be one of these: FAST-pw, FAST-one, FAST-log, FAST-sqrt, FAST-all")
+    	exit(1)
+
+    
     print("Updating FAST dependencies...")
     all_tests = parseTests(working_dir)
     
