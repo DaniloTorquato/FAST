@@ -24,7 +24,6 @@
     ```
 
     Note: `../commons-cli/src/test` is the absolute-path-to-project-root.
-    ```
 
-#### Step 4: Retrieve Prioritized Tests
+#### Step 4: Prioritized Tests
 - Once the command completes execution, a file named "prioritized.txt" will be created in `commons-cli/src/test/fast`, which contains the prioritized list of test cases.
