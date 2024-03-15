@@ -2,6 +2,14 @@
 
 This is a modified version of [FAST](https://github.com/brenomiranda/FAST) that can be used to produce a prioritized test suite given a target test directory. Currently it supports only the black-box version of the prioritization, i.e., it does not assume that coverage data is available.
 
+## Getting started
+
+1. Clone the repository 
+   - `git clone https://github.com/DaniloTorquato/FAST/`
+ 
+2. Install the additional python packages required:
+   - `pip install -r requirements.txt`
+
 ## Usage: 
 ```
 python3 py/fast.py <target-dir> <algorithm>
