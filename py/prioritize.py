@@ -52,11 +52,7 @@ from multiprocessing import Pool
 # from contextlib import contextmanager
 
 
-
-working_dir = '.'
-output_dir = '.'
-method = sys.argv[4]
-
+method = sys.argv[2]
 test_suite = {}
 id_map = {}
 total_time = {}
@@ -119,15 +115,15 @@ def bboxPrioritization(iteration):
 
     print("  Progress: 100%  ")
     print("  Running time:", stime + ptime)
-    print("  Arquivo com os testes priorizados salvo em: ", out_path)
+    print("  File with prioritized tests saved: ", out_path)
     print("")
     return stime + ptime
     
 
 
 if __name__ == "__main__":
-    working_dir = sys.argv[2]
-    results_dir = sys.argv[2]
+    working_dir = sys.argv[1]
+    results_dir = sys.argv[1]
     fast_dir = os.path.join(working_dir,'.fast')
     suite = "fast"
     tests = all_tests
