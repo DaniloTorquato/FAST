@@ -35,7 +35,7 @@ from hashlib import md5
 from glob import glob
 import lsh
 
-usage = """USAGE: python3 fast.py --project-root <project-root> --algorithm <algorithm>
+usage = """USAGE: python3 fast.py <project-root> <algorithm>
 OPTIONS:
   <project-root>: absolute path to the project.
   <algorithm>: possible values for <algorithm> are: FAST-pw, FAST-one, FAST-log, FAST-sqrt, FAST-all.
@@ -135,9 +135,9 @@ def parseTests(working_dir):
 if __name__ == '__main__':
 
     working_dir = '.'
-    if len(sys.argv) == 5:
-        working_dir = sys.argv[2]
-        algorithm = sys.argv[4]
+    if len(sys.argv) == 3:
+        working_dir = sys.argv[1]
+        algorithm = sys.argv[2]
     else:
     	print(usage)
     	exit(1)
