@@ -20,7 +20,7 @@
 #### Step 3: Execute FAST Algorithm
 - Navigate to the FAST directory and run the following command:
     ```
-    python3 py/fast.py --absolute-path-to-project-root ../commons-cli/src/test FAST-pw
+    python3 py/fast.py ../commons-cli/src/test FAST-pw
     ```
 
     Note: `../commons-cli/src/test` is the absolute-path-to-project-root.
