@@ -11,7 +11,7 @@
 #### Step 1: Clone the Repository
 - Clone the repository using the following command:
     ```
-    git clone git@github.com:apache/commons-cli.git
+    git clone https://github.com/apache/commons-cli.git
     ```
 
 #### Step 2: Locate Test Directory
