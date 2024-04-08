@@ -35,11 +35,6 @@ from hashlib import md5
 from glob import glob
 import lsh
 
-usage = """USAGE: python3 fast.py <project-root> <algorithm>
-OPTIONS:
-  <project-root>: absolute path to the project.
-  <algorithm>: possible values for <algorithm> are: FAST-pw, FAST-one, FAST-log, FAST-sqrt, FAST-all.
-"""
 
 def fully_qualified_name(file_path):
     """INPUT
@@ -60,7 +55,6 @@ def fully_qualified_name(file_path):
     
     return ''
 
-
 def parse_coverage_info(input_file):
     tc = ""
 
@@ -76,8 +70,8 @@ def store_md5(md5_path, computed_md5):
     with open(md5_path, 'w') as f_md5:
         f_md5.write(computed_md5)
 
-def compute_lsh(tc, lsh_path):
-    r, b = 1, 10
+def compute_lsh(tc, lsh_path, r, b):
+    #r, b = 1, 10
     n = r * b
     hash_functions = [lsh.hashFamily(i) for i in range(n)]
 
@@ -87,10 +81,16 @@ def compute_lsh(tc, lsh_path):
         minhash = lsh.tcMinhashing(shingle, hash_functions)
         pickle.dump(minhash, f_lsh)
 
-def parseTests(working_dir):
+def parseTests(working_dir, r, b):
 
-    # Find all files that match the JUnit test pattern
-    test_files = glob(os.path.join(working_dir,'**/*Test*.java'), recursive=True)
+    all_files = glob(os.path.join(working_dir, '**/*'), recursive=True)
+    
+    # Filtrar apenas os arquivos que você deseja considerar como testes
+    test_files = [file for file in all_files if 'Test' in file]  # Filtrar por nome de arquivo
+    
+    # Exclua arquivos com extensão .md5 e .lsh
+    test_files = [file for file in test_files if not file.endswith(('.md5', '.lsh', '.bak'))]
+    
     # Create FAST hidden dir
     all_tests = []
     fast_dir = os.path.join(working_dir,'.fast')
@@ -126,32 +126,9 @@ def parseTests(working_dir):
             # file was added or changed since last revision
             store_md5(md5_path, computed_md5)
             
-            compute_lsh(tc, lsh_path)
+            compute_lsh(tc, lsh_path, r, b)
 
         tcID += 1
 
     return all_tests
 
-if __name__ == '__main__':
-
-    working_dir = '.'
-    if len(sys.argv) == 3:
-        working_dir = sys.argv[1]
-        algorithm = sys.argv[2]
-    else:
-    	print(usage)
-    	exit(1)
-    
-    # Check if the algorithm is one of the valid options
-    valid_algorithms = ["FAST-pw", "FAST-one", "FAST-log", "FAST-sqrt", "FAST-all"]
-    
-    if algorithm not in valid_algorithms:
-    	print("The algorithm must be one of these: FAST-pw, FAST-one, FAST-log, FAST-sqrt, FAST-all")
-    	exit(1)
-
-    
-    print("Updating FAST dependencies...")
-    all_tests = parseTests(working_dir)
-    
-    exec(open("py/prioritize.py").read())
-    
