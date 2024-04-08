@@ -35,27 +35,21 @@ along with this source.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
 import os
-# import pickle
 import sys
 from copy import deepcopy
-
 from algorithms import fast_pw, fast_, loadTestSuite
-#from constants import *
-# import metric
-
 import fast
-
-# Multiprocessing tools
 import multiprocessing
 from multiprocessing import Pool
-# from functools import partial
-# from contextlib import contextmanager
+import argparse
 
 
-method = sys.argv[2]
-test_suite = {}
-id_map = {}
-total_time = {}
+usage = """USAGE: python3 fast.py <project-root> <algorithm> r b python3 py/prioritize.py -project_root  <project-root> -algorithm <algorithm> -r <r> -b <b>
+    	OPTIONS:
+  	<project-root>: absolute path to the project.
+  	<algorithm>: possible values for <algorithm> are: FAST-pw, FAST-one, FAST-log, FAST-sqrt, FAST-all.
+"""
+
 
 def read_file(file_path):
     with open(file_path, "r") as f:
@@ -73,44 +67,38 @@ def save_file(file_path, data):
     with open(file_path, "w") as f:
         f.write("\n".join(data)+"\n")
 
-def bboxPrioritization(iteration):
-    global working_dir
-    global output_dir
-    global id_map
+def bboxPrioritization(iteration, r, b):
 
     # Standard FAST parameters
-    r, b = 1, 10
+    #r, b = 1, 10
     
     print(" Run", iteration+ 1)
     
-    if method == "FAST-pw":
+    if algorithm == "FAST-pw":
         stime, ptime, prioritization = fast_pw(
                 r, b, test_suite)
-    if method == "FAST-one":
+    if algorithm == "FAST-one":
         def one_(x): return 1
         stime, ptime, prioritization = fast_(
                 one_, r, b, test_suite)
      
-    if method == "FAST-log":
+    if algorithm == "FAST-log":
         def log_(x): return int(math.log(x, 2)) + 1
         stime, ptime, prioritization = fast_(
                 log_, r, b, test_suite)       
 
-    if method == "FAST-sqrt":
+    if algorithm == "FAST-sqrt":
         def sqrt_(x): return int(math.sqrt(x)) + 1
         stime, ptime, prioritization = fast_(
                 sqrt_, r, b, test_suite)
     
-    if method == "FAST-all":
+    if algorithm == "FAST-all":
         def all_(x): return x
         stime, ptime, prioritization = fast_(
                 all_, r, b, test_suite)
     
-    # writePrioritizedOutput(output_dir, prioritization, iteration)
     out_path = os.path.join(output_dir, str("prioritized")+".txt")
     save_file(out_path, map(lambda p: id_map[p], prioritization))
-    # out_path = os.path.join(output_dir, str(iteration)+"_ids.txt")
-    # save_file(out_path, map(lambda p: "{}".format(p), prioritization))
 
 
     print("  Progress: 100%  ")
@@ -122,17 +110,32 @@ def bboxPrioritization(iteration):
 
 
 if __name__ == "__main__":
-    working_dir = sys.argv[1]
-    results_dir = sys.argv[1]
-    fast_dir = os.path.join(working_dir,'.fast')
-    suite = "fast"
-    tests = all_tests
+    parser = argparse.ArgumentParser(description='Run FAST with various algorithms on a test suite')
+    parser.add_argument('-project_root', type=str, help='Absolute path to the project root')
+    parser.add_argument('-algorithm', choices=["FAST-pw", "FAST-one", "FAST-log", "FAST-sqrt", "FAST-all"], help='Algorithm to use')
+    parser.add_argument('-r', type=int, help='Value of r')
+    parser.add_argument('-b', type=int, help='Value of b')
+    args = parser.parse_args()
+
+    working_dir = args.project_root
+    algorithm = args.algorithm
+    r = args.r
+    b = args.b
+
+    test_suite = {}
+    id_map = {}
+    total_time = {}
+    fast_dir = os.path.join(working_dir, '.fast')
+    tests = fast.parseTests(working_dir, r, b)
     test_suite, id_map = loadTestSuite(tests, input_dir=fast_dir)
-    output_dir = os.path.join(results_dir, suite)
+    output_dir = os.path.join(working_dir, "fast")
+
     if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
+        os.makedirs(output_dir)
     num_cores = multiprocessing.cpu_count()
+    
+
     with Pool(num_cores) as pool:
-            running_time = pool.map(bboxPrioritization, range(1))
+        running_time = pool.starmap(bboxPrioritization, [(i, r, b) for i in range(1)])
 
     total_time = deepcopy(running_time)
