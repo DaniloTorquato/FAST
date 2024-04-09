@@ -12,7 +12,7 @@ This is a modified version of [FAST](https://github.com/brenomiranda/FAST) that 
 
 ## Usage: 
 ```
-python3 py/fast.py <target-dir> <algorithm>
+python3 py/prioritize.py -t|--tests_dir <test-dir> -a|--algorithm <algorithm> -o|--output <output-dir>
 ```
 
 Possible values for "algorithm" are: FAST-pw, FAST-one, FAST-log, FAST-sqrt, FAST-all.
@@ -27,7 +27,7 @@ For our example we will use the Apache commons-cli project. After cloning the pr
 
 From the FAST directory, run the command:
     ```
-    python3 py/fast.py ../commons-cli/src/test FAST-pw
+    python3 py/prioritize.py -t ../commons-cli/src/test -a FAST-pw -o output
     ```
 
-After running FAST, a file containing the prioritized list of test cases should be created in `commons-cli/src/test/fast/prioritized.txt`.
+After running FAST, a file containing the prioritized list of test cases should be created in `./output/prioritized.txt`.
