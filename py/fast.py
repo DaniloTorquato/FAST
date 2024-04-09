@@ -34,6 +34,7 @@ import pickle
 from hashlib import md5
 from glob import glob
 import lsh
+import pathlib
 
 
 def fully_qualified_name(file_path):
@@ -70,26 +71,25 @@ def store_md5(md5_path, computed_md5):
     with open(md5_path, 'w') as f_md5:
         f_md5.write(computed_md5)
 
-def compute_lsh(tc, lsh_path, r, b):
+def compute_lsh(tc, lsh_path, r, b, k):
     #r, b = 1, 10
     n = r * b
     hash_functions = [lsh.hashFamily(i) for i in range(n)]
 
     # Generate LSH hash
     with open(lsh_path, 'wb') as f_lsh:
-        shingle = lsh.kShingle(tc, 5)
+        shingle = lsh.kShingle(tc, k)
         minhash = lsh.tcMinhashing(shingle, hash_functions)
         pickle.dump(minhash, f_lsh)
 
-def parseTests(working_dir, r, b):
+def parseTests(working_dir, r, b, k):
 
-    all_files = glob(os.path.join(working_dir, '**/*'), recursive=True)
-    
-    # Filtrar apenas os arquivos que você deseja considerar como testes
-    test_files = [file for file in all_files if 'Test' in file]  # Filtrar por nome de arquivo
-    
-    # Exclua arquivos com extensão .md5 e .lsh
-    test_files = [file for file in test_files if not file.endswith(('.md5', '.lsh', '.bak'))]
+    test_files = []
+    for path, subdirs, files in os.walk(working_dir):        
+        if path == os.path.join(working_dir, "fast") or path == os.path.join(working_dir, ".fast"):
+            continue
+        for name in files:
+            test_files.append(os.path.join(path, name))
     
     # Create FAST hidden dir
     all_tests = []
@@ -100,13 +100,14 @@ def parseTests(working_dir, r, b):
     tcID = 1
     for test_file in test_files:
     	
-        # Extract the code from the test file
-        
+        # Extract the code from the test file        
         tc = parse_coverage_info(test_file)
-        f_name = fully_qualified_name(test_file)
-        if f_name != "":
-        	all_tests.append(f_name)
+        
+        f_name = pathlib.Path(test_file).stem  # OLD: f_name = fully_qualified_name(test_file)
 
+        if f_name != "":
+            all_tests.append(f_name)
+        
         if (tc == '') or (f_name == ''):
             continue
 
@@ -126,9 +127,8 @@ def parseTests(working_dir, r, b):
             # file was added or changed since last revision
             store_md5(md5_path, computed_md5)
             
-            compute_lsh(tc, lsh_path, r, b)
+            compute_lsh(tc, lsh_path, r, b, k)
 
         tcID += 1
 
     return all_tests
-

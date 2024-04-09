@@ -111,24 +111,33 @@ def bboxPrioritization(iteration, r, b):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run FAST with various algorithms on a test suite')
-    parser.add_argument('-project_root', type=str, help='Absolute path to the project root')
-    parser.add_argument('-algorithm', choices=["FAST-pw", "FAST-one", "FAST-log", "FAST-sqrt", "FAST-all"], help='Algorithm to use')
-    parser.add_argument('-r', type=int, help='Value of r')
-    parser.add_argument('-b', type=int, help='Value of b')
+    parser.add_argument('-t', '--tests_dir', type=str, help='Absolute path to the project root')
+    parser.add_argument('-a', '--algorithm', choices=["FAST-pw", "FAST-one", "FAST-log", "FAST-sqrt", "FAST-all"], help='Algorithm to use')
+    parser.add_argument('-o', '--output', type=str, help='Output directory where the prioritized list "prioritized.txt" will be saved')
     args = parser.parse_args()
+    #print(args)
+    #print(args.tests_dir)
+    #sys.exit()
+    #args = parser.parse_args(['-a', 'FAST-pw', '-t', '../small', '-o', 'out'])
+    #args = {algorithm='FAST-pw', b=10, project_root='../small', r=1}
 
-    working_dir = args.project_root
+    working_dir = args.tests_dir
     algorithm = args.algorithm
-    r = args.r
-    b = args.b
+    output_dir = args.output
+
+
+    # FAST parameters
+    k, n, r, b = 5, 10, 1, 10    
+    fast_dir = os.path.join(working_dir, '.fast')
+
 
     test_suite = {}
     id_map = {}
     total_time = {}
-    fast_dir = os.path.join(working_dir, '.fast')
-    tests = fast.parseTests(working_dir, r, b)
+    
+    tests = fast.parseTests(working_dir, r, b, k)
     test_suite, id_map = loadTestSuite(tests, input_dir=fast_dir)
-    output_dir = os.path.join(working_dir, "fast")
+    #output_dir = os.path.join(working_dir, "fast")
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
